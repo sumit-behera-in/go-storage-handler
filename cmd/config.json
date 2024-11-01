@@ -1,0 +1,24 @@
+{
+  "project": "GO-STORAGE-HANDLER",
+  "database": [
+    {
+      "db_provider": "mongodb",
+      "config": {
+        "protocol": "mongodb://",
+        "connetionURL": "localhost",
+        "port": "27017",
+        "dbName": "demo"
+      }
+    },
+    {
+      "db_provider": "postgres",
+      "config": {
+        "connetionURL": "localhost",
+        "port": "5432",
+        "user": "postgres",
+        "password": "admin",
+        "dbName":  "demo"
+      }
+    }
+  ]
+}
