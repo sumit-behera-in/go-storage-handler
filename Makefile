@@ -42,7 +42,7 @@ test:
 # Build target
 build: test
 	@echo "Building $(APP_NAME) for OS: $(GOOS), Architecture: $(GOARCH)"
-	go build -o $(BUILD_DIR)/$(APP_NAME)$(EXT) .
+	go build -o $(BUILD_DIR)/$(APP_NAME)$(EXT) ./cmd/
 
 # Clean target
 clean:
@@ -58,17 +58,17 @@ run: build
 build-linux: test
 	set GOOS=linux 
 	set GOARCH=amd64 
-	go build -o $(BUILD_DIR)/$(APP_NAME)-linux .
+	go build -o $(BUILD_DIR)/$(APP_NAME)-linux ./cmd/
 
 build-darwin: test
 	set GOOS=darwin 
 	set GOARCH=amd64 
-	go build -o $(BUILD_DIR)/$(APP_NAME)-darwin .
+	go build -o $(BUILD_DIR)/$(APP_NAME)-darwin ./cmd/
 
 build-windows: test
 	set GOOS=windows 
 	set GOARCH=amd64 
-	go build -o $(BUILD_DIR)/$(APP_NAME)-windows.exe
+	go build -o $(BUILD_DIR)/$(APP_NAME)-windows.exe ./cmd/
 
 # Help target to list all commands
 help:
