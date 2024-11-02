@@ -2,6 +2,9 @@
   "project": "GO-STORAGE-HANDLER",
   "database": [
     {
+      "priority" : 1,
+      "total_space_GB" : 200,
+      "available_space_GB":100,
       "db_provider": "mongodb",
       "config": {
         "protocol": "mongodb://",
@@ -11,6 +14,9 @@
       }
     },
     {
+      "priority" : 2,      
+      "total_space_GB" : 200,
+      "available_space_GB":100,
       "db_provider": "postgres",
       "config": {
         "connetionURL": "localhost",
