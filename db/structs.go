@@ -12,7 +12,7 @@ type mongoClient struct {
 	totalSpaceGB     int
 	availableSpaceGB int
 	ctx              context.Context
-	close            context.CancelFunc
+	closeDB          context.CancelFunc
 }
 
 type postgresClient struct {
@@ -23,6 +23,7 @@ type postgresClient struct {
 
 type client interface {
 	connect(Database) error
+	close()
 }
 
 type Clients struct {

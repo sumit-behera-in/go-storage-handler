@@ -68,7 +68,7 @@ func (client *mongoClient) connect(db Database) error {
 	var err error
 
 	clientOptions := options.Client().ApplyURI(fmt.Sprintf("%s%s", db.Config.Protocol, db.Config.ConnectionURL))
-	client.ctx, client.close = context.WithTimeout(context.Background(), 5*time.Minute)
+	client.ctx, client.closeDB = context.WithTimeout(context.Background(), 5*time.Minute)
 	client.db, err = mongo.Connect(client.ctx, clientOptions)
 
 	if err != nil {
@@ -107,4 +107,14 @@ func (client *postgresClient) connect(db Database) error {
 
 func (client *postgresClient) close() {
 	client.db.Close()
+}
+
+func (client *mongoClient) close() {
+	client.closeDB()
+}
+
+func (c *Clients) Close() {
+	for _, client := range c.clients {
+		client.close()
+	}
 }
