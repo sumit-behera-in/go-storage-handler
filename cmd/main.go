@@ -6,6 +6,7 @@ import (
 
 	"github.com/sumit-behera-in/go-storage-handler/cmds"
 	"github.com/sumit-behera-in/go-storage-handler/db"
+	"github.com/sumit-behera-in/go-storage-handler/util"
 	"github.com/urfave/cli/v2"
 )
 
@@ -23,14 +24,14 @@ func main() {
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:     "configPath",
+				Name:     util.ConfigPath,
 				Usage:    "contains config.json file",
 				Value:    "config.json",
 				Required: true,
 			},
 		},
 		Before: func(ctx *cli.Context) error {
-			filePath := ctx.String("configPath")
+			filePath := ctx.String(util.ConfigPath)
 			var err error
 			clients, err = db.New(filePath)
 			return err
