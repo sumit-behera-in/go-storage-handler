@@ -9,20 +9,23 @@ import (
 
 type mongoClient struct {
 	db               *mongo.Client
-	totalSpaceGB     int
-	availableSpaceGB int
+	totalSpaceGB     float64
+	availableSpaceGB float64
 	ctx              context.Context
 	closeDB          context.CancelFunc
 }
 
 type postgresClient struct {
 	db               *sqlx.DB
-	totalSpaceGB     int
-	availableSpaceGB int
+	totalSpaceGB     float64
+	availableSpaceGB float64
 }
 
 type client interface {
 	connect(Database) error
+	upload(string) error
+	availspace(float64) bool
+	updateSpace(float64)
 	close()
 }
 
