@@ -1,9 +1,38 @@
 package db
 
-type Config struct {
+import (
+	"context"
+
+	"github.com/jmoiron/sqlx"
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
+type mongoClient struct {
+	db               *mongo.Client
+	totalSpaceGB     int `json:"total_space_GB"`
+	availableSpaceGB int `json:"available_space_GB"`
+	ctx              context.Context
+	close            context.CancelFunc
+}
+
+type postgresClient struct {
+	db               *sqlx.DB
+	totalSpaceGB     int `json:"total_space_GB"`
+	availableSpaceGB int `json:"available_space_GB"`
+}
+
+type client interface {
+	connect(Database) error
+}
+
+type Clients struct {
+	clients []client
+}
+
+type config struct {
 	Protocol      string `json:"protocol,omitempty"`
 	ConnectionURL string `json:"connetionURL"`
-	Port          string `json:"port"`
+	Port          int    `json:"port"`
 	User          string `json:"user,omitempty"`
 	Password      string `json:"password,omitempty"`
 	DBName        string `json:"dbName"`
@@ -14,10 +43,16 @@ type Database struct {
 	TotalSpaceGB     int    `json:"total_space_GB"`
 	AvailableSpaceGB int    `json:"available_space_GB"`
 	DBProvider       string `json:"db_provider"`
-	Config           Config `json:"config"`
+	Config           config `json:"config"`
+}
+
+type DBCollection struct {
+	Project  string     `json:"project"`
+	Database []Database `json:"database"`
 }
 
 type Data struct {
-	Project  string     `json:"project"`
-	Database []Database `json:"database"`
+	FileName string
+	FileType string
+	File     interface{}
 }
