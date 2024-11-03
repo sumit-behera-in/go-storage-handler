@@ -12,6 +12,8 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	_ "github.com/lib/pq"
 )
 
 func New(ctx *cli.Context) (Clients, error) {
@@ -70,7 +72,7 @@ func (client *mongoClient) connect(db Database) error {
 	client.db, err = mongo.Connect(client.ctx, clientOptions)
 
 	if err != nil {
-		return  err
+		return err
 	}
 
 	err = client.db.Ping(client.ctx, nil)

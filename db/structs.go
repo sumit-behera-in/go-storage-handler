@@ -9,16 +9,16 @@ import (
 
 type mongoClient struct {
 	db               *mongo.Client
-	totalSpaceGB     int `json:"total_space_GB"`
-	availableSpaceGB int `json:"available_space_GB"`
+	totalSpaceGB     int
+	availableSpaceGB int
 	ctx              context.Context
 	close            context.CancelFunc
 }
 
 type postgresClient struct {
 	db               *sqlx.DB
-	totalSpaceGB     int `json:"total_space_GB"`
-	availableSpaceGB int `json:"available_space_GB"`
+	totalSpaceGB     int
+	availableSpaceGB int
 }
 
 type client interface {
