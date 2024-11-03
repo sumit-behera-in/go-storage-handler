@@ -4,15 +4,23 @@ import (
 	"log"
 	"os"
 
+	"github.com/sumit-behera-in/go-storage-handler/cmds"
 	"github.com/sumit-behera-in/go-storage-handler/db"
 	"github.com/urfave/cli/v2"
 )
 
+var clients db.Clients
+
 func main() {
 	app := &cli.App{
-		Name:     "Go Storage Handler",
-		Usage:    "It is used to handle multiple storages",
-		Commands: []*cli.Command{},
+		Name:  "Go Storage Handler",
+		Usage: "It is used to handle multiple storages",
+		Commands: []*cli.Command{
+			cmds.Upload(clients),
+			cmds.Update(clients),
+			cmds.Download(clients),
+			cmds.Delete(clients),
+		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "configPath",
@@ -21,10 +29,18 @@ func main() {
 				Required: true,
 			},
 		},
-		Action: func(ctx *cli.Context) error {
+		Before: func(ctx *cli.Context) error {
 			filePath := ctx.String("configPath")
-			_, err := db.New(filePath)
+			var err error
+			clients, err = db.New(filePath)
 			return err
+		},
+		Action: func(ctx *cli.Context) error {
+			return nil
+		},
+		After: func(ctx *cli.Context) error {
+			clients.Close()
+			return nil
 		},
 	}
 

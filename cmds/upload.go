@@ -1,8 +1,13 @@
 package cmds
 
-import "github.com/urfave/cli/v2"
+import (
+	"fmt"
 
-func Upload() *cli.Command {
+	"github.com/sumit-behera-in/go-storage-handler/db"
+	"github.com/urfave/cli/v2"
+)
+
+func Upload(clients db.Clients) *cli.Command {
 	return &cli.Command{
 		Name:  "upload",
 		Usage: "uploads a file to the storage",
@@ -13,12 +18,11 @@ func Upload() *cli.Command {
 				Required: true,
 			},
 		},
-		Action: upload,
+		Action: func(ctx *cli.Context) error {
+			data := ctx.String("file")
+			fmt.Println("upload")
+			fmt.Println(data)
+			return clients.Upload(data)
+		},
 	}
-}
-
-func upload(*cli.Context) error {
-
-	return nil
-
 }
