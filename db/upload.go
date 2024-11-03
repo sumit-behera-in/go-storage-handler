@@ -3,6 +3,9 @@ package db
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+
+	"github.com/sumit-behera-in/go-storage-handler/util"
 )
 
 func (c *Clients) Upload(data string) error {
@@ -40,12 +43,32 @@ func (c *Clients) Upload(data string) error {
 
 }
 
-func (mc *mongoClient) upload(data string) error {
+func (mc *mongoClient) upload(fPath string) error {
 	return nil
 }
 
-func (pc *postgresClient) upload(data string) error {
-	return nil
+func (pc *postgresClient) upload(fPath string) error {
+	var data = Data{}
+
+	data.FileName = filepath.Base(fPath)
+
+	// Get the file extension
+	fileExtension := filepath.Ext(fPath)
+
+	// Remove the leading dot from the extension, if it exists
+	if len(fileExtension) > 0 {
+		data.FileType = fileExtension[1:]
+	} else {
+		data.FileType = util.UNKNOWN_FILE_TYPE
+	}
+
+	err := pc.createTable(data.FileType)
+	if err != nil {
+		return fmt.Errorf("error while creating a table %v", err)
+	}
+
+	return pc.insertRowQuery(data)
+
 }
 
 func getFileSizeGB(filePath string) (float64, error) {

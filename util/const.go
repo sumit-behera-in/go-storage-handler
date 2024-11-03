@@ -1,5 +1,6 @@
 package util
 
 const (
-	ConfigPath = "configPath"
+	ConfigPath        = "configPath"
+	UNKNOWN_FILE_TYPE = "unkown"
 )
