@@ -22,7 +22,8 @@ func main() {
 			},
 		},
 		Action: func(ctx *cli.Context) error {
-			_, err := db.New(ctx)
+			filePath := ctx.String("configPath")
+			_, err := db.New(filePath)
 			return err
 		},
 	}

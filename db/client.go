@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/urfave/cli/v2"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -16,10 +15,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func New(ctx *cli.Context) (Clients, error) {
-
+func New(filePath string) (Clients, error) {
 	clients := Clients{}
-	filePath := ctx.String("configPath")
 
 	file, err := os.ReadFile(filePath)
 	if err != nil {
