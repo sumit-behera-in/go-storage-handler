@@ -86,8 +86,8 @@ func (client *mongoClient) connect(db Database) error {
 
 func (client *postgresClient) connect(db Database) error {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s sslmode=disable",
-		db.Config.ConnectionURL, db.Config.Port, db.Config.User, db.Config.Password)
+		"password=%s dbname=%s sslmode=disable",
+		db.Config.ConnectionURL, db.Config.Port, db.Config.User, db.Config.Password, db.Config.DBName)
 
 	var err error
 	client.db, err = sqlx.Connect("postgres", psqlInfo)

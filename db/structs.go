@@ -54,5 +54,5 @@ type DBCollection struct {
 type Data struct {
 	FileName string
 	FileType string
-	File     interface{}
+	File     []byte
 }
