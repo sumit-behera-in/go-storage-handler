@@ -69,6 +69,7 @@ func (client *mongoClient) connect(db Database) error {
 	clientOptions := options.Client().ApplyURI(fmt.Sprintf("%s%s", db.Config.Protocol, db.Config.ConnectionURL))
 	client.ctx, client.closeDB = context.WithTimeout(context.Background(), 5*time.Minute)
 	client.db, err = mongo.Connect(client.ctx, clientOptions)
+	client.database = client.db.Database(db.Config.DBName)
 
 	if err != nil {
 		return err

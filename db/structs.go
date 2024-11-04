@@ -8,9 +8,10 @@ import (
 )
 
 type mongoClient struct {
-	db      *mongo.Client
-	ctx     context.Context
-	closeDB context.CancelFunc
+	db       *mongo.Client
+	ctx      context.Context
+	closeDB  context.CancelFunc
+	database *mongo.Database
 }
 
 type postgresClient struct {
@@ -40,7 +41,7 @@ type config struct {
 type Database struct {
 	Priority         int     `json:"priority"`
 	TotalSpaceGB     float64 `json:"total_space_GB"`
-	AvailableSpaceGB float64 `json:"available_space_GB"`
+	UsedSpaceGB float64 `json:"used_space_GB"`
 	DBProvider       string  `json:"db_provider"`
 	Config           config  `json:"config"`
 }

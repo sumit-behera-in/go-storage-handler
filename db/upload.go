@@ -45,7 +45,27 @@ func (c *Clients) Upload(data string) error {
 }
 
 func (mc *mongoClient) upload(fPath string) error {
-	return nil
+	var data = Data{}
+
+	data.FileName = filepath.Base(fPath)
+
+	// Get the file extension
+	fileExtension := filepath.Ext(fPath)
+
+	// Remove the leading dot from the extension, if it exists
+	if len(fileExtension) > 0 {
+		data.FileType = fileExtension[1:]
+	} else {
+		data.FileType = util.UNKNOWN_FILE_TYPE
+	}
+
+	var err error
+	data.File, err = os.ReadFile(fPath)
+	if err != nil {
+		return fmt.Errorf("error while creating a table %v", err)
+	}
+
+	return mc.insertRow(data)
 }
 
 func (pc *postgresClient) upload(fPath string) error {
@@ -90,9 +110,9 @@ func getFileSizeGB(filePath string) (float64, error) {
 }
 
 func (c *Clients) availspace(data float64, index int) bool {
-	return (c.dbCollection.Database[index].AvailableSpaceGB + data) <= 0.8*c.dbCollection.Database[index].TotalSpaceGB
+	return (c.dbCollection.Database[index].UsedSpaceGB + data) <= 0.8*c.dbCollection.Database[index].TotalSpaceGB
 }
 
 func (c *Clients) updateSpace(data float64, index int) {
-	c.dbCollection.Database[index].AvailableSpaceGB += data
+	c.dbCollection.Database[index].UsedSpaceGB += data
 }
