@@ -11,7 +11,7 @@ import (
 func (c *Clients) Upload(data string) error {
 
 	var client client
-	// var space_available = false
+	var space_available = false
 
 	sizeOfTheData, err := getFileSizeGB(data)
 	if err != nil {
@@ -20,17 +20,16 @@ func (c *Clients) Upload(data string) error {
 
 	i := 0
 
-	// for _, clientData := range c.clients {
-	// 	client = clientData
-	// 	if space_available = client.availspace(sizeOfTheData); space_available {
-	// 		break
-	// 	}
-	// 	i++
-	// }
+	for i < len(c.dbCollection.Database) {
+		if space_available = c.availspace(sizeOfTheData, i); space_available {
+			break
+		}
+		i++
+	}
 
-	// if !space_available {
-	// 	return fmt.Errorf("unable to upload as any of the databases cant hold this data")
-	// }
+	if !space_available {
+		return fmt.Errorf("unable to upload as any of the databases cant hold this data")
+	}
 
 	client = c.clients[0]
 
