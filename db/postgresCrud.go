@@ -8,8 +8,7 @@ func (pc *postgresClient) createTable(tableName string) error {
 	query := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(100) NOT NULL,
-		file BYTEA NOT NULL,		
-		created timestamp DEFAULT NOW()
+		file BYTEA NOT NULL
 	)`, tableName)
 
 	_, err := pc.db.Exec(query)
@@ -17,7 +16,7 @@ func (pc *postgresClient) createTable(tableName string) error {
 }
 
 func (pc *postgresClient) insertRowQuery(data Data) error {
-	query := fmt.Sprintf(`INSERT INTO %s (file_name,file)
+	query := fmt.Sprintf(`INSERT INTO %s (name,file)
 	VALUES ($1,$2) RETURNING id`, data.FileType)
 
 	return pc.db.QueryRow(query, data.FileName, data.File).Err()
