@@ -29,6 +29,8 @@ func New(filePath string) (Clients, error) {
 		return clients, fmt.Errorf("error parsing json: %v", err)
 	}
 
+	clients.dbCollection = dbBCollection
+
 	for i, db := range dbBCollection.Database {
 		if err = clients.addConnect(db.DBProvider, db); err != nil {
 			return clients, fmt.Errorf("error connecting client no.: %v , err %v", i, err)

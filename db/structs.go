@@ -8,29 +8,24 @@ import (
 )
 
 type mongoClient struct {
-	db               *mongo.Client
-	totalSpaceGB     float64
-	availableSpaceGB float64
-	ctx              context.Context
-	closeDB          context.CancelFunc
+	db      *mongo.Client
+	ctx     context.Context
+	closeDB context.CancelFunc
 }
 
 type postgresClient struct {
-	db               *sqlx.DB
-	totalSpaceGB     float64
-	availableSpaceGB float64
+	db *sqlx.DB
 }
 
 type client interface {
 	connect(Database) error
 	upload(string) error
-	availspace(float64) bool
-	updateSpace(float64)
 	close()
 }
 
 type Clients struct {
-	clients []client
+	clients      []client
+	dbCollection DBCollection
 }
 
 type config struct {
@@ -43,11 +38,11 @@ type config struct {
 }
 
 type Database struct {
-	Priority         int    `json:"priority"`
-	TotalSpaceGB     int    `json:"total_space_GB"`
-	AvailableSpaceGB int    `json:"available_space_GB"`
-	DBProvider       string `json:"db_provider"`
-	Config           config `json:"config"`
+	Priority         int     `json:"priority"`
+	TotalSpaceGB     float64 `json:"total_space_GB"`
+	AvailableSpaceGB float64 `json:"available_space_GB"`
+	DBProvider       string  `json:"db_provider"`
+	Config           config  `json:"config"`
 }
 
 type DBCollection struct {

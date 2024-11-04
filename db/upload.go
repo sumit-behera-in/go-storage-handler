@@ -11,7 +11,7 @@ import (
 func (c *Clients) Upload(data string) error {
 
 	var client client
-	var space_available = false
+	// var space_available = false
 
 	sizeOfTheData, err := getFileSizeGB(data)
 	if err != nil {
@@ -20,25 +20,27 @@ func (c *Clients) Upload(data string) error {
 
 	i := 0
 
-	for _, clientData := range c.clients {
-		client = clientData
-		if space_available = client.availspace(sizeOfTheData); space_available == true {
-			break
-		}
-		i++
-	}
+	// for _, clientData := range c.clients {
+	// 	client = clientData
+	// 	if space_available = client.availspace(sizeOfTheData); space_available {
+	// 		break
+	// 	}
+	// 	i++
+	// }
 
-	if !space_available {
-		return fmt.Errorf("unable to upload as any of the databases cant hold this data")
-	}
+	// if !space_available {
+	// 	return fmt.Errorf("unable to upload as any of the databases cant hold this data")
+	// }
+
+	client = c.clients[0]
 
 	err = client.upload(data)
 	if err != nil {
 		return err
 	}
 
-	println("Sucessfully uploaded to database No: %v", i)
-	client.updateSpace(sizeOfTheData)
+	println("Sucessfully uploaded to database index: %v", i)
+	c.updateSpace(sizeOfTheData, i)
 	return nil
 
 }
@@ -62,7 +64,13 @@ func (pc *postgresClient) upload(fPath string) error {
 		data.FileType = util.UNKNOWN_FILE_TYPE
 	}
 
-	err := pc.createTable(data.FileType)
+	var err error
+	data.File, err = os.ReadFile(fPath)
+	if err != nil {
+		return fmt.Errorf("error while creating a table %v", err)
+	}
+
+	err = pc.createTable(data.FileType)
 	if err != nil {
 		return fmt.Errorf("error while creating a table %v", err)
 	}
@@ -82,18 +90,10 @@ func getFileSizeGB(filePath string) (float64, error) {
 	return fileSizeGB, nil
 }
 
-func (mc *mongoClient) availspace(data float64) bool {
-	return (mc.availableSpaceGB + data) <= 0.8*mc.totalSpaceGB
+func (c *Clients) availspace(data float64, index int) bool {
+	return (c.dbCollection.Database[index].AvailableSpaceGB + data) <= 0.8*c.dbCollection.Database[index].TotalSpaceGB
 }
 
-func (pc *postgresClient) availspace(data float64) bool {
-	return (data + pc.availableSpaceGB) <= 0.8*pc.totalSpaceGB
-}
-
-func (mc *mongoClient) updateSpace(data float64) {
-	mc.availableSpaceGB += data
-}
-
-func (pc *postgresClient) updateSpace(data float64) {
-	pc.availableSpaceGB += data
+func (c *Clients) updateSpace(data float64, index int) {
+	c.dbCollection.Database[index].AvailableSpaceGB += data
 }

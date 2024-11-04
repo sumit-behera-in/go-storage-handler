@@ -10,17 +10,16 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var clients db.Clients
 
 func main() {
 	app := &cli.App{
 		Name:  "Go Storage Handler",
 		Usage: "It is used to handle multiple storages",
 		Commands: []*cli.Command{
-			cmds.Upload(clients),
-			cmds.Update(clients),
-			cmds.Download(clients),
-			cmds.Delete(clients),
+			cmds.Upload(),
+			// cmds.Update(clients),
+			// cmds.Download(clients),
+			// cmds.Delete(clients),
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -33,14 +32,14 @@ func main() {
 		Before: func(ctx *cli.Context) error {
 			filePath := ctx.String(util.ConfigPath)
 			var err error
-			clients, err = db.New(filePath)
+			cmds.Clients, err = db.New(filePath)
 			return err
 		},
 		Action: func(ctx *cli.Context) error {
 			return nil
 		},
 		After: func(ctx *cli.Context) error {
-			clients.Close()
+			cmds.Clients.Close()
 			return nil
 		},
 	}
