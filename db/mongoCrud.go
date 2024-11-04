@@ -4,10 +4,11 @@ import (
 	"fmt"
 
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (mc *mongoClient) insertRow(data Data) error {
-	bucket, err := gridfs.NewBucket(mc.database)
+	bucket, err := gridfs.NewBucket(mc.database, options.GridFSBucket().SetName(data.FileType))
 	if err != nil {
 		return err
 	}
