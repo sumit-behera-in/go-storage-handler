@@ -21,6 +21,7 @@ type postgresClient struct {
 type client interface {
 	connect(Database) error
 	upload(string) error
+	download(string, string)
 	close()
 }
 
@@ -39,11 +40,11 @@ type config struct {
 }
 
 type Database struct {
-	Priority         int     `json:"priority"`
-	TotalSpaceGB     float64 `json:"total_space_GB"`
-	UsedSpaceGB float64 `json:"used_space_GB"`
-	DBProvider       string  `json:"db_provider"`
-	Config           config  `json:"config"`
+	Priority     int     `json:"priority"`
+	TotalSpaceGB float64 `json:"total_space_GB"`
+	UsedSpaceGB  float64 `json:"used_space_GB"`
+	DBProvider   string  `json:"db_provider"`
+	Config       config  `json:"config"`
 }
 
 type DBCollection struct {
@@ -55,4 +56,8 @@ type Data struct {
 	FileName string
 	FileType string
 	File     []byte
+}
+
+func (d *Data) isEmpty() bool {
+	return len(d.File) == 0
 }
