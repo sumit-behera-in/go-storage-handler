@@ -1,11 +1,10 @@
 package cmds
 
 import (
-	"github.com/sumit-behera-in/go-storage-handler/db"
 	"github.com/urfave/cli/v2"
 )
 
-func Download(clients db.Clients) *cli.Command {
+func Download() *cli.Command {
 	return &cli.Command{
 		Name:  "download",
 		Usage: "downloads a file to the storage",

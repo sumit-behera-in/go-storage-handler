@@ -28,8 +28,9 @@ func (pc *postgresClient) insertRowQuery(data Data) error {
 
 func (pc *postgresClient) download(filename string, tableName string) {
 	data := Data{}
-	query := fmt.Sprintf("SELECT name, file FROM %s WHERE id = $1", tableName)
-	err := pc.db.QueryRow(query, filename).Scan(&data.FileName, &data.File)
+	data.FileName = filename
+	query := fmt.Sprintf("SELECT file FROM %s WHERE name = $1", tableName)
+	err := pc.db.QueryRow(query, filename).Scan(&data.File)
 
 	if err != nil {
 		log.Fatal("Error retrieving file from database:", err)

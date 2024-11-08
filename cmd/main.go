@@ -10,7 +10,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-
 func main() {
 	app := &cli.App{
 		Name:  "Go Storage Handler",
@@ -18,7 +17,7 @@ func main() {
 		Commands: []*cli.Command{
 			cmds.Upload(),
 			// cmds.Update(clients),
-			// cmds.Download(clients),
+			cmds.Download(),
 			// cmds.Delete(clients),
 		},
 		Flags: []cli.Flag{
