@@ -35,7 +35,7 @@ func (c *Clients) Upload(fPath string) error {
 
 	var data = Data{}
 
-	data.FileName = filepath.Base(fPath)
+	data.fileName = filepath.Base(fPath)
 
 	// Get the file extension
 	fileExtension := filepath.Ext(fPath)

@@ -53,7 +53,7 @@ type DBCollection struct {
 }
 
 type Data struct {
-	FileName string
+	fileName string
 	FileType string
 	File     []byte
 }
