@@ -8,29 +8,35 @@ import (
 
 	"github.com/sumit-behera-in/go-storage-handler/util"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (mc *mongoClient) upload(data Data) error {
+	// Create a new GridFS bucket with the specified file type.
 	bucket, err := gridfs.NewBucket(mc.database, options.GridFSBucket().SetName(data.FileType))
 	if err != nil {
 		return err
 	}
 
-	// uploadstream is used to upload the data
-	uploadStream, err := bucket.OpenUploadStreamWithID(nil, data.FileName)
+	// Generate a new ObjectID to use as the file's ID.
+	fileID := primitive.NewObjectID()
+
+	// Open an upload stream with the generated file ID.
+	uploadStream, err := bucket.OpenUploadStreamWithID(fileID, data.FileName)
 	if err != nil {
 		return fmt.Errorf("failed to open upload stream: %v", err)
 	}
 	defer uploadStream.Close()
 
+	// Write the file data to the upload stream.
 	_, err = uploadStream.Write(data.File)
 	if err != nil {
 		return fmt.Errorf("failed to upload file data: %v", err)
 	}
 
-	fmt.Printf("File %s uploaded successfully\n", data.FileName)
+	fmt.Printf("File %s uploaded successfully with ID %s\n", data.FileName, fileID.Hex())
 	return nil
 }
 
