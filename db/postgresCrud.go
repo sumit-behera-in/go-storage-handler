@@ -19,7 +19,11 @@ func (pc *postgresClient) createTable(tableName string) error {
 	return err
 }
 
-func (pc *postgresClient) insertRowQuery(data Data) error {
+func (pc *postgresClient) upload(data Data) error {
+	err := pc.createTable(data.FileType)
+	if err != nil {
+		return fmt.Errorf("error while creating a table %v", err)
+	}
 	query := fmt.Sprintf(`INSERT INTO %s (name,file)
 	VALUES ($1,$2) RETURNING id`, data.FileType)
 
@@ -43,4 +47,6 @@ func (pc *postgresClient) download(filename string, tableName string) {
 			log.Fatal("Error writing file:", err)
 		}
 	}
+
+	fmt.Printf("File %s downloaded successfully to %s\n", filename, util.DOWNLOAD_PATH)
 }

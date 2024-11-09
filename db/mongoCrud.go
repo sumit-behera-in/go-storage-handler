@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (mc *mongoClient) insertRow(data Data) error {
+func (mc *mongoClient) upload(data Data) error {
 	bucket, err := gridfs.NewBucket(mc.database, options.GridFSBucket().SetName(data.FileType))
 	if err != nil {
 		return err
@@ -34,17 +34,19 @@ func (mc *mongoClient) insertRow(data Data) error {
 	return nil
 }
 
-func (mc *mongoClient) download(filename string, tableName string) {
+func (mc *mongoClient) download(filename string, fileType string) {
 	data := Data{}
 
 	// Create a GridFS bucket
-	bucket, err := gridfs.NewBucket(mc.database)
+	println("dtatabase :", mc.database)
+	bucket, err := gridfs.NewBucket(mc.database, options.GridFSBucket().SetName(fileType))
 	if err != nil {
 		log.Fatal("failed to create GridFS bucket:", err)
 	}
 
 	filter := bson.M{"name": filename}
-	err = mc.database.Collection(tableName+".files").FindOne(mc.ctx, filter).Decode(&data)
+	println(fileType + ".files")
+	err = mc.database.Collection(fileType+".files").FindOne(mc.ctx, filter).Decode(&data)
 	if err != nil {
 		log.Fatal("Error retrieving file from database:", err)
 	}

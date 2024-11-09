@@ -20,7 +20,7 @@ type postgresClient struct {
 
 type client interface {
 	connect(Database) error
-	upload(string) error
+	upload(Data) error
 	download(string, string)
 	close()
 }
