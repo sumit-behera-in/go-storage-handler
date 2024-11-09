@@ -46,7 +46,6 @@ func (pc *postgresClient) download(filename string, tableName string) {
 		if err != nil {
 			log.Fatal("Error writing file:", err)
 		}
+		fmt.Printf("File %s downloaded successfully to %s\n", filename, util.DOWNLOAD_PATH)
 	}
-
-	fmt.Printf("File %s downloaded successfully to %s\n", filename, util.DOWNLOAD_PATH)
 }
