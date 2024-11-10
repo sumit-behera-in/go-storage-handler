@@ -1,2 +1,4 @@
 /bin/
-x.jpg
+
+*.jpg
+*.png

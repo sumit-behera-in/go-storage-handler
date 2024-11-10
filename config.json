@@ -4,7 +4,7 @@
     {
       "priority": 1,
       "total_space_GB": 100,
-      "used_space_GB": 0.00043840216232299804,
+      "used_space_GB": 0.0014530175713992118,
       "db_provider": "postgres",
       "config": {
         "connetionURL": "localhost",
