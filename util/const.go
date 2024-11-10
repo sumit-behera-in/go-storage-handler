@@ -9,7 +9,7 @@ import (
 
 const (
 	ConfigPath        = "configPath"
-	UNKNOWN_FILE_TYPE = "unkown"
+	UNKNOWN_FILE_TYPE = "bin"
 )
 
 func GetDefaultDownloadPath() (string, error) {

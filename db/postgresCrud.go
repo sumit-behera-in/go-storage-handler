@@ -83,6 +83,8 @@ func (pc *postgresClient) updateSpace() float64 {
 }
 
 func (pc *postgresClient) find(fileName string, fileType string) bool {
+	pc.createTable(fileType)
+
 	var exists bool
 
 	query := fmt.Sprintf(`SELECT EXISTS (SELECT 1 FROM %v WHERE file_name = $1);`, fileType)
