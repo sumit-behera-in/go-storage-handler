@@ -11,7 +11,7 @@ import (
 func (pc *postgresClient) createTable(fileType string) error {
 	query := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
 		id SERIAL PRIMARY KEY,
-		name VARCHAR(100) NOT NULL UNIQUE,
+		file_name VARCHAR(100) NOT NULL UNIQUE,
 		file BYTEA NOT NULL
 	)`, fileType)
 
@@ -24,7 +24,7 @@ func (pc *postgresClient) upload(data Data) error {
 	if err != nil {
 		return fmt.Errorf("error while creating a table %v", err)
 	}
-	query := fmt.Sprintf(`INSERT INTO %s (name,file)
+	query := fmt.Sprintf(`INSERT INTO %s (file_name,file)
 	VALUES ($1,$2) RETURNING id`, data.FileType)
 
 	return pc.db.QueryRow(query, data.fileName, data.File).Err()
@@ -33,7 +33,7 @@ func (pc *postgresClient) upload(data Data) error {
 func (pc *postgresClient) download(fileName string, fileType string) {
 	data := Data{}
 	data.fileName = fileName
-	query := fmt.Sprintf("SELECT file FROM %s WHERE name = $1", fileType)
+	query := fmt.Sprintf("SELECT file FROM %s WHERE file_name = $1", fileType)
 	err := pc.db.QueryRow(query, fileName).Scan(&data.File)
 
 	if err != nil {
@@ -50,4 +50,34 @@ func (pc *postgresClient) download(fileName string, fileType string) {
 	}
 }
 
-func (pc *postgresClient) update(fileName string)
+// func (pc *postgresClient) update(data Data) error {
+// 	query := fmt.Sprintf(
+// 		`INSERT INTO %v (file_name,file)
+// 		VALUES ($1,$2)
+// 		ON CONFLICT (file_name)
+// 		DO UPDATE SET
+// 		file = EXCLUDED.file
+// 		RETURNING id`, data.FileType,
+// 	)
+// 	_, err := pc.db.Exec(query, data.fileName, data.FileType)
+// 	return err
+// }
+
+func (pc *postgresClient) delete(fileName string, fileType string) error {
+
+	query := fmt.Sprintf(
+		`DELETE FROM %s
+        WHERE file_name = $1;`,
+		fileType,
+	)
+
+	_, err := pc.db.Exec(query, fileName)
+	if err != nil {
+		return err
+	}
+
+	vaccumSQL := fmt.Sprintf("VACCUM %s", fileType)
+	_, err = pc.db.Exec(vaccumSQL)
+
+	return err
+}
