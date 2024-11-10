@@ -17,7 +17,7 @@
     {
       "priority": 2,
       "total_space_GB": 200,
-      "used_space_GB": 0,
+      "used_space_GB": 0.00014495849609375,
       "db_provider": "mongodb",
       "config": {
         "protocol": "mongodb://",

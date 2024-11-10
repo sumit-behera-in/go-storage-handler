@@ -12,17 +12,12 @@ func (c *Clients) Delete(fileName string) error {
 	// wait for all clients to complete
 	wg.Add(len(c.clients))
 
-	i := 0
-	n := len(c.clients)
+	for _, client := range c.clients {
 
-	for i < n {
-
-		go func(index int) {
+		go func() {
 			defer wg.Done()
-			c.clients[0].delete(fileName, filepath.Ext(fileName)[1:])
-		}(i)
-
-		i++
+			client.delete(fileName, filepath.Ext(fileName)[1:])
+		}()
 
 	}
 

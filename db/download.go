@@ -11,18 +11,13 @@ func (c *Clients) Download(fileName string) {
 	// wait for all clients to complete
 	wg.Add(len(c.clients))
 
-	i := 0
-	n := len(c.clients)
+	for _, client := range c.clients {
 
-	for i < n {
-
-		go func(index int) {
+		go func() {
 			defer wg.Done()
-			fileExtension := filepath.Ext(fileName)
-			c.clients[i].download(fileName, fileExtension)
-		}(i)
-
-		i++
+			fileExtension := filepath.Ext(fileName)[1:]
+			client.download(fileName, fileExtension)
+		}()
 
 	}
 
