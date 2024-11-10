@@ -11,7 +11,7 @@ func Download() *cli.Command {
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "file",
-				Usage:    "downlod a file to our database",
+				Usage:    "provide the name of th file to be downloded from our database",
 				Required: true,
 			},
 		},

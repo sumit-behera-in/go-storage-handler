@@ -6,5 +6,20 @@ import (
 )
 
 func Update(clients db.Clients) *cli.Command {
-	return &cli.Command{}
+	return &cli.Command{
+		Name:  "update",
+		Usage: "update a file to the storage",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "file",
+				Usage:    "file path to update a file to our database",
+				Required: true,
+			},
+		},
+		Action: func(ctx *cli.Context) error {
+			filePath := ctx.String("file")
+			Clients.Update(filePath)
+			return nil
+		},
+	}
 }

@@ -81,3 +81,7 @@ func (mc *mongoClient) download(fileName string, fileType string) {
 
 	}
 }
+
+func (mc *mongoClient) delete(fileName string, fileType string) error {
+	return nil
+}

@@ -18,7 +18,7 @@ func main() {
 			cmds.Upload(),
 			// cmds.Update(clients),
 			cmds.Download(),
-			// cmds.Delete(clients),
+			cmds.Delete(),
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{

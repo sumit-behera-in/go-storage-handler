@@ -22,6 +22,7 @@ type client interface {
 	connect(Database) error
 	upload(Data) error
 	download(string, string)
+	delete(string, string) error
 	close()
 }
 

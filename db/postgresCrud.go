@@ -50,19 +50,6 @@ func (pc *postgresClient) download(fileName string, fileType string) {
 	}
 }
 
-// func (pc *postgresClient) update(data Data) error {
-// 	query := fmt.Sprintf(
-// 		`INSERT INTO %v (file_name,file)
-// 		VALUES ($1,$2)
-// 		ON CONFLICT (file_name)
-// 		DO UPDATE SET
-// 		file = EXCLUDED.file
-// 		RETURNING id`, data.FileType,
-// 	)
-// 	_, err := pc.db.Exec(query, data.fileName, data.FileType)
-// 	return err
-// }
-
 func (pc *postgresClient) delete(fileName string, fileType string) error {
 
 	query := fmt.Sprintf(
