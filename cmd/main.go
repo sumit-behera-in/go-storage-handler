@@ -10,10 +10,15 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+const (
+	version = "1.0.0"
+)
+
 func main() {
 	app := &cli.App{
-		Name:  "Go Storage Handler",
-		Usage: "It is used to handle multiple storages",
+		Name:    "Go Storage Handler",
+		Usage:   "It is used to handle multiple storages",
+		Version: version,
 		Commands: []*cli.Command{
 			cmds.Upload(),
 			cmds.Update(),

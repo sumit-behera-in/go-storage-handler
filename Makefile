@@ -1,5 +1,6 @@
 # Define the application name
-APP_NAME = goStorageHandler
+APP_VERSION = "1.0.0"
+APP_NAME = "goStorageHandler @v$(APP_VERSION)"
 
 # Detect the OS and architecture of the host system
 ifeq ($(OS),Windows_NT)
@@ -32,7 +33,7 @@ endif
 BUILD_DIR = bin
 
 # Default target
-all: build
+build-all: build-linux build-windows build-darwin
 
 # Test target
 test:
@@ -50,7 +51,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 # Run target
-run: build
+run:
 	@echo "Running $(APP_NAME)..."
 	./$(BUILD_DIR)/$(APP_NAME)$(EXT)
 
