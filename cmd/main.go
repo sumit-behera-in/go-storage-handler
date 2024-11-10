@@ -16,7 +16,7 @@ func main() {
 		Usage: "It is used to handle multiple storages",
 		Commands: []*cli.Command{
 			cmds.Upload(),
-			// cmds.Update(clients),
+			cmds.Update(),
 			cmds.Download(),
 			cmds.Delete(),
 		},

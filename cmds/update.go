@@ -1,11 +1,10 @@
 package cmds
 
 import (
-	"github.com/sumit-behera-in/go-storage-handler/db"
 	"github.com/urfave/cli/v2"
 )
 
-func Update(clients db.Clients) *cli.Command {
+func Update() *cli.Command {
 	return &cli.Command{
 		Name:  "update",
 		Usage: "update a file to the storage",
