@@ -41,12 +41,17 @@ func (pc *postgresClient) download(fileName string, fileType string) {
 	}
 
 	if !data.isEmpty() {
-		outputPath := fmt.Sprintf("%s/%s", util.DOWNLOAD_PATH, fileName)
+		downloadPath, err := util.GetDefaultDownloadPath()
+		if err != nil {
+			log.Fatal("Error writing file:", err)
+		}
+
+		outputPath := fmt.Sprintf("%s/%s", downloadPath, fileName)
 		err = os.WriteFile(outputPath, data.File, 0666)
 		if err != nil {
 			log.Fatal("Error writing file:", err)
 		}
-		fmt.Printf("File %s downloaded successfully to %s\n", fileName, util.DOWNLOAD_PATH)
+		fmt.Printf("File %s downloaded successfully to %s\n", fileName, downloadPath)
 	}
 }
 

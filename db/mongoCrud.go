@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"os"
 
@@ -65,19 +64,17 @@ func (mc *mongoClient) download(fileName string, fileType string) {
 	defer downloadStream.Close()
 
 	if !data.isEmpty() {
-		// Create a new file to save the downloaded data
-		outFile, err := os.Create(util.DOWNLOAD_PATH + "/" + fileName)
+		downloadPath, err := util.GetDefaultDownloadPath()
 		if err != nil {
-			log.Fatal(err)
-		}
-		defer outFile.Close()
-
-		// Read from GridFS and write to file
-		if _, err := io.Copy(outFile, downloadStream); err != nil {
-			log.Fatalf("failed to write data to file: %v", err)
+			log.Fatal("Error writing file:", err)
 		}
 
-		fmt.Printf("File %s downloaded successfully to %s\n", fileName, util.DOWNLOAD_PATH)
+		outputPath := fmt.Sprintf("%s/%s", downloadPath, fileName)
+		err = os.WriteFile(outputPath, data.File, 0666)
+		if err != nil {
+			log.Fatal("Error writing file:", err)
+		}
+		fmt.Printf("File %s downloaded successfully to %s\n", fileName, downloadPath)
 
 	}
 }
