@@ -34,11 +34,7 @@ func (pc *postgresClient) download(fileName string, fileType string) {
 	data := Data{}
 	data.fileName = fileName
 	query := fmt.Sprintf("SELECT file FROM %s WHERE file_name = $1", fileType)
-	err := pc.db.QueryRow(query, fileName).Scan(&data.File)
-
-	if err != nil {
-		log.Fatal("Error retrieving file from database:", err)
-	}
+	pc.db.QueryRow(query, fileName).Scan(&data.File)
 
 	if !data.isEmpty() {
 		downloadPath, err := util.GetDefaultDownloadPath()
@@ -84,4 +80,16 @@ func (pc *postgresClient) updateSpace() float64 {
 	// Convert bytes to GB
 	totalSizeGB := float64(totalSizeBytes) / (1024 * 1024 * 1024)
 	return totalSizeGB
+}
+
+func (pc *postgresClient) find(fileName string, fileType string) bool {
+	var exists bool
+
+	query := fmt.Sprintf(`SELECT EXISTS (SELECT 1 FROM %v WHERE file_name = $1);`, fileType)
+	err := pc.db.Get(&exists, query, fileName)
+	if err != nil {
+		log.Fatalf("failed to execute query: %v", err)
+	}
+
+	return exists
 }

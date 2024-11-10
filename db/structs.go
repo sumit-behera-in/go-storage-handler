@@ -24,6 +24,7 @@ type client interface {
 	download(string, string)
 	delete(string, string) error
 	updateSpace() float64
+	find(string, string) bool
 	close()
 }
 

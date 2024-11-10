@@ -20,6 +20,17 @@ func (mc *mongoClient) upload(data Data) error {
 		return err
 	}
 
+	// Check if a file with the same fileName already exists
+	cursor, err := bucket.Find(bson.M{"filename": data.fileName})
+	if err != nil {
+		return fmt.Errorf("failed to check existing files: %v", err)
+	}
+	defer cursor.Close(mc.ctx)
+
+	if cursor.Next(mc.ctx) {
+		return fmt.Errorf("a file with name %s already exists in bucket %s", data.fileName, data.FileType)
+	}
+
 	// Generate a new ObjectID to use as the file's ID.
 	fileID := primitive.NewObjectID()
 
@@ -133,6 +144,11 @@ func (mc *mongoClient) delete(fileName string, fileType string) error {
 	}
 
 	fmt.Printf("File %s successfully deleted from bucket %s\n", fileName, fileType)
+
+	result := mc.database.RunCommand(mc.ctx, bson.D{{Key: "compact", Value: fmt.Sprintf("%v.chunks", fileType)}})
+	if result.Err() != nil {
+		return fmt.Errorf("failed to compact database: %v", result.Err())
+	}
 	return nil
 }
 
@@ -158,4 +174,21 @@ func (mc *mongoClient) updateSpace() float64 {
 	// Convert bytes to gigabytes
 	sizeInGB := storageSizeBytes / (1024 * 1024 * 1024)
 	return sizeInGB
+}
+
+func (mc *mongoClient) find(fileName string, fileType string) bool {
+	bucket, err := gridfs.NewBucket(mc.database, options.GridFSBucket().SetName(fileType))
+	if err != nil {
+		log.Fatalf("failed to create GridFS bucket: %v", err)
+		return false
+	}
+
+	// Find the file with the given fileName.
+	cursor, err := bucket.Find(bson.M{"filename": fileName})
+	if err != nil {
+		log.Fatalf("failed to check existing files: %v", err)
+		return false
+	}
+	defer cursor.Close(mc.ctx)
+	return cursor.Next(mc.ctx)
 }

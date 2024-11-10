@@ -10,6 +10,26 @@ import (
 
 func (c *Clients) Upload(fPath string) error {
 
+	var data = Data{}
+	data.fileName = filepath.Base(fPath)
+	// Get the file extension
+	fileExtension := filepath.Ext(fPath)
+	// Remove the leading dot from the extension, if it exists
+	if len(fileExtension) > 0 {
+		data.FileType = fileExtension[1:]
+	} else {
+		data.FileType = util.UNKNOWN_FILE_TYPE
+	}
+
+	// check if the data exists anywhere
+	var exists bool
+	for i, client := range c.clients {
+		exists = client.find(data.fileName, data.FileType)
+		if exists {
+			return fmt.Errorf("the file already exists on database with index : %v", i)
+		}
+	}
+
 	var client client
 	var space_available = false
 
@@ -33,20 +53,6 @@ func (c *Clients) Upload(fPath string) error {
 	}
 
 	client = c.clients[i]
-
-	var data = Data{}
-
-	data.fileName = filepath.Base(fPath)
-
-	// Get the file extension
-	fileExtension := filepath.Ext(fPath)
-
-	// Remove the leading dot from the extension, if it exists
-	if len(fileExtension) > 0 {
-		data.FileType = fileExtension[1:]
-	} else {
-		data.FileType = util.UNKNOWN_FILE_TYPE
-	}
 
 	data.File, err = os.ReadFile(fPath)
 	if err != nil {
