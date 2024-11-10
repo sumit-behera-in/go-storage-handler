@@ -1,7 +1,6 @@
 package cmds
 
 import (
-	"github.com/sumit-behera-in/go-storage-handler/util"
 	"github.com/urfave/cli/v2"
 )
 
@@ -18,8 +17,6 @@ func Upload() *cli.Command {
 		},
 		Action: func(ctx *cli.Context) error {
 			data := ctx.String("file")
-			jsonPath := ctx.String(util.ConfigPath)
-			defer Clients.UpdateJson(jsonPath)
 			return Clients.Upload(data)
 		},
 	}

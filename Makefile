@@ -1,6 +1,5 @@
 # Define the application name
-APP_VERSION = "1.0.0"
-APP_NAME = "goStorageHandler @v$(APP_VERSION)"
+APP_NAME = "goStorageHandler"
 
 # Detect the OS and architecture of the host system
 ifeq ($(OS),Windows_NT)
@@ -43,7 +42,7 @@ test:
 # Build target
 build: test
 	@echo "Building $(APP_NAME) for OS: $(GOOS), Architecture: $(GOARCH)"
-	go build -o $(BUILD_DIR)/$(APP_NAME)$(EXT) ./cmd/
+	go build -ldflags="-s -w" -trimpath -o $(BUILD_DIR)/$(APP_NAME)$(EXT) ./cmd/
 
 # Clean target
 clean:
@@ -59,17 +58,17 @@ run:
 build-linux: test
 	set GOOS=linux 
 	set GOARCH=amd64 
-	go build -o $(BUILD_DIR)/$(APP_NAME)-linux ./cmd/
+	go build -ldflags="-s -w" -trimpath -o $(BUILD_DIR)/$(APP_NAME)-linux ./cmd/
 
 build-darwin: test
 	set GOOS=darwin 
 	set GOARCH=amd64 
-	go build -o $(BUILD_DIR)/$(APP_NAME)-darwin ./cmd/
+	go build -ldflags="-s -w" -trimpath -o $(BUILD_DIR)/$(APP_NAME)-darwin ./cmd/
 
 build-windows: test
 	set GOOS=windows 
 	set GOARCH=amd64 
-	go build -o $(BUILD_DIR)/$(APP_NAME)-windows.exe ./cmd/
+	go build -ldflags="-s -w" -trimpath -o $(BUILD_DIR)/$(APP_NAME)-windows.exe ./cmd/
 
 # Help target to list all commands
 help:

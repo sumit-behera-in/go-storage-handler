@@ -23,6 +23,7 @@ type client interface {
 	upload(Data) error
 	download(string, string)
 	delete(string, string) error
+	updateSpace() float64
 	close()
 }
 

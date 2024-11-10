@@ -68,8 +68,20 @@ func (pc *postgresClient) delete(fileName string, fileType string) error {
 		return err
 	}
 
-	vaccumSQL := fmt.Sprintf("VACCUM %s", fileType)
+	vaccumSQL := fmt.Sprintf("VACCUM FULL %s", fileType)
 	_, err = pc.db.Exec(vaccumSQL)
 
 	return err
+}
+
+func (pc *postgresClient) updateSpace() float64 {
+	var totalSizeBytes int64
+	err := pc.db.Get(&totalSizeBytes, `SELECT pg_database_size(current_database())`)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Convert bytes to GB
+	totalSizeGB := float64(totalSizeBytes) / (1024 * 1024 * 1024)
+	return totalSizeGB
 }

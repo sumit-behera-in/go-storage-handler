@@ -43,6 +43,8 @@ func main() {
 			return nil
 		},
 		After: func(ctx *cli.Context) error {
+			jsonPath := ctx.String(util.ConfigPath)
+			cmds.Clients.UpdateJson(jsonPath)
 			cmds.Clients.Close()
 			return nil
 		},

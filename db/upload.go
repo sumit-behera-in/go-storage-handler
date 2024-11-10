@@ -21,7 +21,8 @@ func (c *Clients) Upload(fPath string) error {
 	i := 0
 
 	for i < len(c.dbCollection.Database) {
-		if space_available = c.availspace(sizeOfTheData, i); space_available {
+		c.dbCollection.Database[i].UsedSpaceGB = c.clients[i].updateSpace()
+		if space_available = c.isAvailspace(sizeOfTheData, i); space_available {
 			break
 		}
 		i++
@@ -58,7 +59,6 @@ func (c *Clients) Upload(fPath string) error {
 	}
 
 	println("Sucessfully uploaded to database index: %v", i)
-	c.updateSpace(sizeOfTheData, i)
 	return nil
 
 }
@@ -74,10 +74,6 @@ func getFileSizeGB(filePath string) (float64, error) {
 	return fileSizeGB, nil
 }
 
-func (c *Clients) availspace(data float64, index int) bool {
+func (c *Clients) isAvailspace(data float64, index int) bool {
 	return (c.dbCollection.Database[index].UsedSpaceGB + data) <= 0.8*c.dbCollection.Database[index].TotalSpaceGB
-}
-
-func (c *Clients) updateSpace(data float64, index int) {
-	c.dbCollection.Database[index].UsedSpaceGB += data
 }
