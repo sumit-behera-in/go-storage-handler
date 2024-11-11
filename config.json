@@ -1,30 +1,4 @@
 {
-  "project": "GO-STORAGE-HANDLER",
-  "database": [
-    {
-      "priority": 1,
-      "total_space_GB": 0.01074348025023937,
-      "used_space_GB": 0.008029120974242687,
-      "db_provider": "postgres",
-      "config": {
-        "connetionURL": "localhost",
-        "port": 5432,
-        "user": "postgres",
-        "password": "admin",
-        "dbName": "dev"
-      }
-    },
-    {
-      "priority": 2,
-      "total_space_GB": 200,
-      "used_space_GB": 0.001316070556640625,
-      "db_provider": "mongodb",
-      "config": {
-        "protocol": "mongodb://",
-        "connetionURL": "localhost",
-        "port": 27017,
-        "dbName": "dev"
-      }
-    }
-  ]
+  "project": "",
+  "database": null
 }
