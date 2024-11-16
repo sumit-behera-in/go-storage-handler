@@ -23,14 +23,14 @@ type client interface {
 	upload(Data) error
 	download(string, string)
 	delete(string, string) error
-	updateSpace() float64
+	UpdateSpace() float64
 	find(string, string) bool
 	close()
 }
 
 type Clients struct {
-	clients      []client
-	dbCollection DBCollection
+	Clients      []client
+	DBCollection DBCollection
 }
 
 type config struct {
@@ -56,7 +56,7 @@ type DBCollection struct {
 }
 
 type Data struct {
-	fileName string
+	FileName string
 	FileType string
 	File     []byte
 }

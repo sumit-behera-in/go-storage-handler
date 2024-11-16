@@ -17,8 +17,7 @@ func Delete() *cli.Command {
 		},
 		Action: func(ctx *cli.Context) error {
 			filePath := ctx.String("file")
-			Clients.Delete(filePath)
-			return nil
+			return Clients.Delete(filePath)
 		},
 	}
 }

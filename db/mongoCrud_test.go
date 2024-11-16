@@ -64,7 +64,7 @@ func Test_mongoClient_delete(t *testing.T) {
 	}
 }
 
-func Test_mongoClient_updateSpace(t *testing.T) {
+func Test_mongoClient_UpdateSpace(t *testing.T) {
 	tests := []struct {
 		name string
 		mc   *mongoClient
@@ -74,8 +74,8 @@ func Test_mongoClient_updateSpace(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.mc.updateSpace(); got != tt.want {
-				t.Errorf("mongoClient.updateSpace() = %v, want %v", got, tt.want)
+			if got := tt.mc.UpdateSpace(); got != tt.want {
+				t.Errorf("mongoClient.UpdateSpace() = %v, want %v", got, tt.want)
 			}
 		})
 	}

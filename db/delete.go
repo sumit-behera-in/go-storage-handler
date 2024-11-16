@@ -9,10 +9,10 @@ func (c *Clients) Delete(fileName string) error {
 
 	var wg sync.WaitGroup
 
-	// wait for all clients to complete
-	wg.Add(len(c.clients))
+	// wait for all Clients to complete
+	wg.Add(len(c.Clients))
 
-	for _, client := range c.clients {
+	for _, client := range c.Clients {
 
 		go func() {
 			defer wg.Done()

@@ -1,19 +1,21 @@
-package db
+package cmds
 
 import (
 	"encoding/json"
 	"os"
+
+	"github.com/sumit-behera-in/go-storage-handler/db"
 )
 
-func (c *Clients) UpdateJson(jsonPath string) {
+func UpdateJson(c db.Clients, jsonPath string) {
 	println("update json called on ")
 	i := 0
-	for i < len(c.dbCollection.Database) {
-		c.dbCollection.Database[i].UsedSpaceGB = c.clients[i].updateSpace()
+	for i < len(c.DBCollection.Database) {
+		c.DBCollection.Database[i].UsedSpaceGB = c.Clients[i].UpdateSpace()
 		i++
 	}
 
-	updatedData, err := json.MarshalIndent(c.dbCollection, "", "  ")
+	updatedData, err := json.MarshalIndent(c.DBCollection, "", "  ")
 	if err != nil {
 		println("Error marshaling JSON:", err)
 		return

@@ -21,21 +21,21 @@ func (mc *mongoClient) upload(data Data) error {
 	}
 
 	// Check if a file with the same fileName already exists
-	cursor, err := bucket.Find(bson.M{"filename": data.fileName})
+	cursor, err := bucket.Find(bson.M{"filename": data.FileName})
 	if err != nil {
 		return fmt.Errorf("failed to check existing files: %v", err)
 	}
 	defer cursor.Close(mc.ctx)
 
 	if cursor.Next(mc.ctx) {
-		return fmt.Errorf("a file with name %s already exists in bucket %s", data.fileName, data.FileType)
+		return fmt.Errorf("a file with name %s already exists in bucket %s", data.FileName, data.FileType)
 	}
 
 	// Generate a new ObjectID to use as the file's ID.
 	fileID := primitive.NewObjectID()
 
 	// Open an upload stream with the generated file ID.
-	uploadStream, err := bucket.OpenUploadStreamWithID(fileID, data.fileName)
+	uploadStream, err := bucket.OpenUploadStreamWithID(fileID, data.FileName)
 	if err != nil {
 		return fmt.Errorf("failed to open upload stream: %v", err)
 	}
@@ -47,13 +47,13 @@ func (mc *mongoClient) upload(data Data) error {
 		return fmt.Errorf("failed to upload file data: %v", err)
 	}
 
-	fmt.Printf("File %s uploaded successfully with ID %s\n", data.fileName, fileID.Hex())
+	fmt.Printf("File %s uploaded successfully with ID %s\n", data.FileName, fileID.Hex())
 	return nil
 }
 
 func (mc *mongoClient) download(fileName string, fileType string) {
 	data := Data{
-		fileName: fileName,
+		FileName: fileName,
 		FileType: fileType,
 	}
 
@@ -152,7 +152,7 @@ func (mc *mongoClient) delete(fileName string, fileType string) error {
 	return nil
 }
 
-func (mc *mongoClient) updateSpace() float64 {
+func (mc *mongoClient) UpdateSpace() float64 {
 	var result bson.M
 	if err := mc.database.RunCommand(mc.ctx, bson.D{{Key: "dbStats", Value: 1}}).Decode(&result); err != nil {
 		log.Fatalf("failed to run dbStats command: %v", err)

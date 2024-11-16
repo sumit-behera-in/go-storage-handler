@@ -16,8 +16,8 @@ func Upload() *cli.Command {
 			},
 		},
 		Action: func(ctx *cli.Context) error {
-			data := ctx.String("file")
-			return Clients.Upload(data)
+			data, sizeOfTheData := getInfo(ctx)
+			return Clients.Upload(data, sizeOfTheData)
 		},
 	}
 }

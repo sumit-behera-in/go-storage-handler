@@ -2,9 +2,7 @@ package db
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -15,29 +13,18 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func New(filePath string) (Clients, error) {
-	clients := Clients{}
+func New(dbBCollection DBCollection) (Clients, error) {
+	Clients := Clients{}
 
-	file, err := os.ReadFile(filePath)
-	if err != nil {
-		return clients, err
-	}
-
-	// Unmarshal the JSON into the DBBCollection struct
-	var dbBCollection DBCollection
-	if err := json.Unmarshal(file, &dbBCollection); err != nil {
-		return clients, fmt.Errorf("error parsing json: %v", err)
-	}
-
-	clients.dbCollection = dbBCollection
+	Clients.DBCollection = dbBCollection
 
 	for i, db := range dbBCollection.Database {
-		if err = clients.addConnect(db.DBProvider, db); err != nil {
-			return clients, fmt.Errorf("error connecting client no.: %v , err %v", i, err)
+		if err := Clients.addConnect(db.DBProvider, db); err != nil {
+			return Clients, fmt.Errorf("error connecting client no.: %v , err %w", i, err)
 		}
 	}
 
-	return clients, nil
+	return Clients, nil
 }
 
 func (c *Clients) addConnect(dbProvider string, db Database) error {
@@ -50,13 +37,13 @@ func (c *Clients) addConnect(dbProvider string, db Database) error {
 		if err != nil {
 			return err
 		}
-		c.clients = append(c.clients, mongoClient)
+		c.Clients = append(c.Clients, mongoClient)
 	} else if dbProvider == "postgres" {
 		err = postgresClient.connect(db)
 		if err != nil {
 			return err
 		}
-		c.clients = append(c.clients, postgresClient)
+		c.Clients = append(c.Clients, postgresClient)
 
 	}
 	return err
@@ -114,7 +101,7 @@ func (client *mongoClient) close() {
 }
 
 func (c *Clients) Close() {
-	for _, client := range c.clients {
+	for _, client := range c.Clients {
 		client.close()
 	}
 }

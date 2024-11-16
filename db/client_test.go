@@ -1,37 +1,10 @@
 package db
 
 import (
-	"reflect"
 	"testing"
 
 	_ "github.com/lib/pq"
 )
-
-func TestNew(t *testing.T) {
-	type args struct {
-		filePath string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    Clients
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := New(tt.args.filePath)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("New() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("New() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestClients_addConnect(t *testing.T) {
 	type args struct {

@@ -16,9 +16,8 @@ func Update() *cli.Command {
 			},
 		},
 		Action: func(ctx *cli.Context) error {
-			filePath := ctx.String("file")
-			Clients.Update(filePath)
-			return nil
+			data, sizeOfTheData := getInfo(ctx)
+			return Clients.Update(data, sizeOfTheData)
 		},
 	}
 }

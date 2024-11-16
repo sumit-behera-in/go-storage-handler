@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 
@@ -36,7 +38,18 @@ func main() {
 		Before: func(ctx *cli.Context) error {
 			filePath := ctx.String(util.ConfigPath)
 			var err error
-			cmds.Clients, err = db.New(filePath)
+
+			file, err := os.ReadFile(filePath)
+			if err != nil {
+				return err
+			}
+
+			// Unmarshal the JSON into the DBBCollection struct
+			var dbBCollection db.DBCollection
+			if err := json.Unmarshal(file, &dbBCollection); err != nil {
+				return fmt.Errorf("error parsing json: %v", err)
+			}
+			cmds.Clients, err = db.New(dbBCollection)
 			return err
 		},
 		Action: func(ctx *cli.Context) error {
@@ -44,7 +57,7 @@ func main() {
 		},
 		After: func(ctx *cli.Context) error {
 			jsonPath := ctx.String(util.ConfigPath)
-			cmds.Clients.UpdateJson(jsonPath)
+			cmds.UpdateJson(cmds.Clients, jsonPath)
 			cmds.Clients.Close()
 			return nil
 		},

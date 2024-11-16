@@ -27,12 +27,12 @@ func (pc *postgresClient) upload(data Data) error {
 	query := fmt.Sprintf(`INSERT INTO %s (file_name,file)
 	VALUES ($1,$2) RETURNING id`, data.FileType)
 
-	return pc.db.QueryRow(query, data.fileName, data.File).Err()
+	return pc.db.QueryRow(query, data.FileName, data.File).Err()
 }
 
 func (pc *postgresClient) download(fileName string, fileType string) {
 	data := Data{}
-	data.fileName = fileName
+	data.FileName = fileName
 	query := fmt.Sprintf("SELECT file FROM %s WHERE file_name = $1", fileType)
 	pc.db.QueryRow(query, fileName).Scan(&data.File)
 
@@ -70,7 +70,7 @@ func (pc *postgresClient) delete(fileName string, fileType string) error {
 	return err
 }
 
-func (pc *postgresClient) updateSpace() float64 {
+func (pc *postgresClient) UpdateSpace() float64 {
 	var totalSizeBytes int64
 	err := pc.db.Get(&totalSizeBytes, `SELECT pg_database_size(current_database())`)
 	if err != nil {

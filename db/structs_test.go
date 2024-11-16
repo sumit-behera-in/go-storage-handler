@@ -9,13 +9,13 @@ func TestData_isEmpty(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "Test Sucessful",
-			d:    &Data{fileName: "myfile", FileType: "exe", File: []byte("This is a sample mock data.")},
+			name: "Test Successful",
+			d:    &Data{FileName: "myfile", FileType: "exe", File: []byte("This is a sample mock data.")},
 			want: false,
 		},
 		{
-			name: "Test Unsucessful",
-			d:    &Data{fileName: "myfile", FileType: "exe", File: []byte{}},
+			name: "Test Unsuccessful",
+			d:    &Data{FileName: "myfile", FileType: "exe", File: []byte{}},
 			want: true,
 		},
 	}

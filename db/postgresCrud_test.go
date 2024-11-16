@@ -85,7 +85,7 @@ func Test_postgresClient_delete(t *testing.T) {
 	}
 }
 
-func Test_postgresClient_updateSpace(t *testing.T) {
+func Test_postgresClient_UpdateSpace(t *testing.T) {
 	tests := []struct {
 		name string
 		pc   *postgresClient
@@ -95,8 +95,8 @@ func Test_postgresClient_updateSpace(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.pc.updateSpace(); got != tt.want {
-				t.Errorf("postgresClient.updateSpace() = %v, want %v", got, tt.want)
+			if got := tt.pc.UpdateSpace(); got != tt.want {
+				t.Errorf("postgresClient.UpdateSpace() = %v, want %v", got, tt.want)
 			}
 		})
 	}

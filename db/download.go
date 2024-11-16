@@ -8,10 +8,10 @@ import (
 func (c *Clients) Download(fileName string) {
 	var wg sync.WaitGroup
 
-	// wait for all clients to complete
-	wg.Add(len(c.clients))
+	// wait for all Clients to complete
+	wg.Add(len(c.Clients))
 
-	for _, client := range c.clients {
+	for _, client := range c.Clients {
 
 		go func() {
 			defer wg.Done()
