@@ -3,8 +3,8 @@
   "database": [
     {
       "priority": 1,
-      "total_space_GB": 0.01074348025023937,
-      "used_space_GB": 0.008174079470336437,
+      "total_space_GB": 0.1074348025023937,
+      "used_space_GB": 0.009226935915648937,
       "db_provider": "postgres",
       "config": {
         "connetionURL": "localhost",
@@ -17,7 +17,7 @@
     {
       "priority": 2,
       "total_space_GB": 200,
-      "used_space_GB": 0.014316558837890625,
+      "used_space_GB": 0.01535797119140625,
       "db_provider": "mongodb",
       "config": {
         "protocol": "mongodb://",
