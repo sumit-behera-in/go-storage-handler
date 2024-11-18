@@ -15,7 +15,7 @@ func (c *Clients) Upload(data Data, sizeOfTheData float64) error {
 		}
 	}
 
-	var client client
+	var client Client
 	var space_available = false
 
 	i := 0

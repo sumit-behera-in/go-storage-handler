@@ -18,7 +18,7 @@ type postgresClient struct {
 	db *sqlx.DB
 }
 
-type client interface {
+type Client interface {
 	connect(Database) error
 	upload(Data) error
 	download(string, string)
@@ -29,11 +29,11 @@ type client interface {
 }
 
 type Clients struct {
-	Clients      []client
+	Clients      []Client
 	DBCollection DBCollection
 }
 
-type config struct {
+type Config struct {
 	Protocol      string `json:"protocol,omitempty"`
 	ConnectionURL string `json:"connetionURL"`
 	Port          int    `json:"port"`
@@ -47,7 +47,7 @@ type Database struct {
 	TotalSpaceGB float64 `json:"total_space_GB"`
 	UsedSpaceGB  float64 `json:"used_space_GB"`
 	DBProvider   string  `json:"db_provider"`
-	Config       config  `json:"config"`
+	Config       Config  `json:"config"`
 }
 
 type DBCollection struct {
