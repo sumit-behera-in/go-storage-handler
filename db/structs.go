@@ -34,25 +34,25 @@ type Clients struct {
 }
 
 type Config struct {
-	Protocol      string `json:"protocol,omitempty"`
-	ConnectionURL string `json:"connetionURL"`
-	Port          int    `json:"port"`
-	User          string `json:"user,omitempty"`
-	Password      string `json:"password,omitempty"`
-	DBName        string `json:"dbName"`
+	Protocol      string `bson:"protocol,omitempty"`
+	ConnectionURL string `bson:"connectionURL"`
+	Port          int    `bson:"port"`
+	User          string `bson:"user,omitempty"`	
+	Password      string `bson:"password,omitempty"`
+	DBName        string `bson:"dbName"`
 }
 
 type Database struct {
-	Priority     int     `json:"priority"`
-	TotalSpaceGB float64 `json:"total_space_GB"`
-	UsedSpaceGB  float64 `json:"used_space_GB"`
-	DBProvider   string  `json:"db_provider"`
-	Config       Config  `json:"config"`
+	Priority     int     `bson:"priority"`
+	TotalSpaceGB float64 `bson:"total_space_GB"`
+	UsedSpaceGB  float64 `bson:"used_space_GB"`
+	DBProvider   string  `bson:"db_provider"`
+	Config       Config  `bson:"config"`
 }
 
 type DBCollection struct {
-	Project  string     `json:"project"`
-	Database []Database `json:"database"`
+	Project  string     `bson:"project"`
+	Database []Database `bson:"database"`
 }
 
 type Data struct {
