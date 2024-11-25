@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
 
-	"github.com/sumit-behera-in/go-storage-handler/util"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
@@ -51,7 +49,7 @@ func (mc *mongoClient) upload(data Data) error {
 	return nil
 }
 
-func (mc *mongoClient) download(fileName string, fileType string) {
+func (mc *mongoClient) download(fileName string, fileType string) Data {
 	data := Data{
 		FileName: fileName,
 		FileType: fileType,
@@ -59,31 +57,36 @@ func (mc *mongoClient) download(fileName string, fileType string) {
 
 	bucket, err := gridfs.NewBucket(mc.database, options.GridFSBucket().SetName(fileType))
 	if err != nil {
-		log.Fatalf("failed to create GridFS bucket: %v", err)
+		log.Printf("failed to create GridFS bucket: %v", err)
+		return data
 	}
 
 	// Find the file with the given fileName.
 	var fileID primitive.ObjectID
 	cursor, err := bucket.Find(bson.M{"filename": fileName})
 	if err != nil {
-		log.Fatalf("failed to find file: %v", err)
+		log.Printf("failed to find file: %w", err)
+		return data
 	}
 	defer cursor.Close(mc.ctx)
 
 	if cursor.Next(mc.ctx) {
 		var fileInfo bson.M
 		if err = cursor.Decode(&fileInfo); err != nil {
-			log.Fatalf("failed to decode file info: %v", err)
+			log.Printf("failed to decode file info: %w", err)
+			return data
 		}
 		fileID = fileInfo["_id"].(primitive.ObjectID)
 	} else {
-		log.Fatalf("file %s not found in bucket %s", fileName, fileType)
+		log.Printf("file %s not found in bucket %s", fileName, fileType)
+		return data
 	}
 
 	// Open the download stream with the located fileID.
 	downloadStream, err := bucket.OpenDownloadStream(fileID)
 	if err != nil {
-		log.Fatalf("failed to open download stream: %v", err)
+		log.Printf("failed to open download stream: %w", err)
+		return data
 	}
 	defer downloadStream.Close()
 
@@ -91,26 +94,14 @@ func (mc *mongoClient) download(fileName string, fileType string) {
 	fileData := make([]byte, downloadStream.GetFile().Length)
 	_, err = downloadStream.Read(fileData)
 	if err != nil && err != io.EOF {
-		log.Fatalf("failed to read file data: %v", err)
+		log.Printf("failed to read file data: %w", err)
+		return data
 	}
 
 	// Store the file data in the data struct.
 	data.File = fileData
 
-	if !data.isEmpty() {
-		downloadPath, err := util.GetDefaultDownloadPath()
-		if err != nil {
-			log.Fatal("Error writing file:", err)
-		}
-
-		outputPath := fmt.Sprintf("%s/%s", downloadPath, fileName)
-		err = os.WriteFile(outputPath, data.File, 0666)
-		if err != nil {
-			log.Fatal("Error writing file:", err)
-		}
-		fmt.Printf("File %s downloaded successfully to %s\n", fileName, downloadPath)
-
-	}
+	return data
 }
 
 func (mc *mongoClient) delete(fileName string, fileType string) error {
@@ -155,7 +146,8 @@ func (mc *mongoClient) delete(fileName string, fileType string) error {
 func (mc *mongoClient) UpdateSpace() float64 {
 	var result bson.M
 	if err := mc.database.RunCommand(mc.ctx, bson.D{{Key: "dbStats", Value: 1}}).Decode(&result); err != nil {
-		log.Fatalf("failed to run dbStats command: %v", err)
+		log.Printf("failed to run dbStats command: %w", err)
+		return 0
 	}
 
 	// Retrieve the storage size in bytes, handling both int64 and float64 cases
@@ -168,7 +160,8 @@ func (mc *mongoClient) UpdateSpace() float64 {
 	case float64:
 		storageSizeBytes = size
 	default:
-		log.Fatalf("failed to retrieve storageSize: unexpected type %T", size)
+		log.Printf("failed to retrieve storageSize: unexpected type %T", size)
+		return 0
 	}
 
 	// Convert bytes to gigabytes
@@ -179,14 +172,14 @@ func (mc *mongoClient) UpdateSpace() float64 {
 func (mc *mongoClient) find(fileName string, fileType string) bool {
 	bucket, err := gridfs.NewBucket(mc.database, options.GridFSBucket().SetName(fileType))
 	if err != nil {
-		log.Fatalf("failed to create GridFS bucket: %v", err)
+		log.Printf("failed to create GridFS bucket: %w", err)
 		return false
 	}
 
 	// Find the file with the given fileName.
 	cursor, err := bucket.Find(bson.M{"filename": fileName})
 	if err != nil {
-		log.Fatalf("failed to check existing files: %v", err)
+		log.Printf("failed to check existing files: %w", err)
 		return false
 	}
 	defer cursor.Close(mc.ctx)

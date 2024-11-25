@@ -21,7 +21,7 @@ func TestData_isEmpty(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.d.isEmpty(); got != tt.want {
+			if got := tt.d.IsEmpty(); got != tt.want {
 				t.Errorf("Data.isEmpty() = %v, want %v", got, tt.want)
 			}
 		})

@@ -21,7 +21,7 @@ type postgresClient struct {
 type Client interface {
 	connect(Database) error
 	upload(Data) error
-	download(string, string)
+	download(string, string) Data
 	delete(string, string) error
 	UpdateSpace() float64
 	find(string, string) bool
@@ -61,6 +61,6 @@ type Data struct {
 	File     []byte
 }
 
-func (d *Data) isEmpty() bool {
+func (d *Data) IsEmpty() bool {
 	return len(d.File) == 0
 }

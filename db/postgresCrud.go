@@ -3,9 +3,6 @@ package db
 import (
 	"fmt"
 	"log"
-	"os"
-
-	"github.com/sumit-behera-in/go-storage-handler/util"
 )
 
 func (pc *postgresClient) createTable(fileType string) error {
@@ -30,25 +27,17 @@ func (pc *postgresClient) upload(data Data) error {
 	return pc.db.QueryRow(query, data.FileName, data.File).Err()
 }
 
-func (pc *postgresClient) download(fileName string, fileType string) {
+func (pc *postgresClient) download(fileName string, fileType string) Data {
 	data := Data{}
 	data.FileName = fileName
+	data.FileType = fileType
 	query := fmt.Sprintf("SELECT file FROM %s WHERE file_name = $1", fileType)
-	pc.db.QueryRow(query, fileName).Scan(&data.File)
-
-	if !data.isEmpty() {
-		downloadPath, err := util.GetDefaultDownloadPath()
-		if err != nil {
-			log.Fatal("Error writing file:", err)
-		}
-
-		outputPath := fmt.Sprintf("%s/%s", downloadPath, fileName)
-		err = os.WriteFile(outputPath, data.File, 0666)
-		if err != nil {
-			log.Fatal("Error writing file:", err)
-		}
-		fmt.Printf("File %s downloaded successfully to %s\n", fileName, downloadPath)
+	err := pc.db.QueryRow(query, fileName).Scan(&data.File)
+	if err != nil {
+		log.Printf("Download Failed for %s with error : %w", fileName, err)		
 	}
+
+	return data
 }
 
 func (pc *postgresClient) delete(fileName string, fileType string) error {
@@ -74,7 +63,7 @@ func (pc *postgresClient) UpdateSpace() float64 {
 	var totalSizeBytes int64
 	err := pc.db.Get(&totalSizeBytes, `SELECT pg_database_size(current_database())`)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Error while updating space in postgres error : %w", err)
 	}
 
 	// Convert bytes to GB
@@ -90,7 +79,7 @@ func (pc *postgresClient) find(fileName string, fileType string) bool {
 	query := fmt.Sprintf(`SELECT EXISTS (SELECT 1 FROM %v WHERE file_name = $1);`, fileType)
 	err := pc.db.Get(&exists, query, fileName)
 	if err != nil {
-		log.Fatalf("failed to execute query: %v", err)
+		log.Printf("failed to execute query: %w", err)
 	}
 
 	return exists

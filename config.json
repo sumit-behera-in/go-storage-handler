@@ -18,7 +18,7 @@
       "db_provider": "mongodb",
       "priority": 2,
       "total_space_GB": 200,
-      "used_space_GB": 0.000034332275390625,
+      "used_space_GB": 0.000080108642578125,
       "config": {
         "protocol": "mongodb://",
         "connectionURL": "localhost",

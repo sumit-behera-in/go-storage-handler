@@ -1,6 +1,10 @@
 package cmds
 
 import (
+	"fmt"
+	"os"
+
+	"github.com/sumit-behera-in/go-storage-handler/util"
 	"github.com/urfave/cli/v2"
 )
 
@@ -16,8 +20,22 @@ func Download() *cli.Command {
 			},
 		},
 		Action: func(ctx *cli.Context) error {
-			data := ctx.String("file")
-			Clients.Download(data)
+			fileName := ctx.String("file")
+			data := Clients.Download(fileName)
+
+			if !data.IsEmpty() {
+				downloadPath, err := util.GetDefaultDownloadPath()
+				if err != nil {
+					return err
+				}
+
+				outputPath := fmt.Sprintf("%s/%s", downloadPath, fileName)
+				err = os.WriteFile(outputPath, data.File, 0666)
+				if err != nil {
+					return err
+				}
+				fmt.Printf("File %s downloaded successfully to %s\n", fileName, downloadPath)
+			}
 			return nil
 		},
 	}

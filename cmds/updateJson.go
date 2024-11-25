@@ -10,7 +10,7 @@ import (
 func UpdateJson(c db.Clients, jsonPath string) {
 	println("update json called on ")
 	i := 0
-	for i < len(c.DBCollection.Database) {
+	for i < len(c.Clients) {
 		c.DBCollection.Database[i].UsedSpaceGB = c.Clients[i].UpdateSpace()
 		i++
 	}
