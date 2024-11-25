@@ -4,8 +4,8 @@
     {
       "db_provider": "postgres",
       "priority": 1,
-      "total_space_GB": 0.1074348025023937,
-      "used_space_GB": 0.009226935915648937,
+      "total_space_GB": 0,
+      "used_space_GB": 0.013056891970336437,
       "config": {
         "connectionURL": "localhost",
         "port": 5432,
@@ -18,7 +18,7 @@
       "db_provider": "mongodb",
       "priority": 2,
       "total_space_GB": 200,
-      "used_space_GB": 0.000080108642578125,
+      "used_space_GB": 0.00019073486328125,
       "config": {
         "protocol": "mongodb://",
         "connectionURL": "localhost",

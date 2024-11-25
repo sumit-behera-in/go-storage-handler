@@ -33,8 +33,8 @@ func (pc *postgresClient) download(fileName string, fileType string) Data {
 	data.FileType = fileType
 	query := fmt.Sprintf("SELECT file FROM %s WHERE file_name = $1", fileType)
 	err := pc.db.QueryRow(query, fileName).Scan(&data.File)
-	if err != nil {
-		log.Printf("Download Failed for %s with error : %w", fileName, err)		
+	if err != nil && err.Error() != "sql: no rows in result set" {
+		log.Printf("Download Failed for %s with error : %s", fileName, err.Error())
 	}
 
 	return data

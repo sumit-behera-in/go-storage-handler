@@ -78,7 +78,7 @@ func (mc *mongoClient) download(fileName string, fileType string) Data {
 		}
 		fileID = fileInfo["_id"].(primitive.ObjectID)
 	} else {
-		log.Printf("file %s not found in bucket %s", fileName, fileType)
+		// log.Printf("file %s not found in bucket %s", fileName, fileType)
 		return data
 	}
 
